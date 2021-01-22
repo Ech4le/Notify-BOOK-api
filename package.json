@@ -10,10 +10,6 @@
     "seed": "node final/util/seed/index.js",
     "lint": "eslint \"src/**/*.js\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:javascripteverywhere/api.git"
-  },
   "nodemonConfig": {
     "ignore": [
       "**.test.js"
