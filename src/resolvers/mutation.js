@@ -109,5 +109,50 @@ module.exports = {
 
         //Utworzenie i zwrot tokena JSON web
         return jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    }
+    },
+    toogleFavorite: async (parent, { id }, { models, user }) => {
+        if (!user) {
+            throw new AuthenticationError();
+        }
+
+        //Sprawdzenie czy uzytkownik oznaczyl juz dana notatke jako ulubiona
+        let noteCheck = await models.Note.findById(id);
+        const hasUser = noteCheck.favoritedBy.indexOf(user.id);
+
+        //Jezeli nazwa uzytkownika znajduje sie na liscie, nalezy ja 
+        // z niej usunac i zmniejszyc o 1 wartosc wlasciwosci favoriteCount
+        if (hasUser >= 0) {
+            return await models.Note.findByIdAndUpdate(
+                id,
+                {
+                    $pull: {
+                        favoritedBy: mongoose.Types.ObjectId(user.id)
+                    },
+                    $inc: {
+                        favoriteCount: -1
+                    }
+                },
+                {
+                    new: true
+                }
+            );
+        } else {
+            //Jezeli nazwa uzytkownika nie znajduje sie na liscie, nalezy ja
+            //dodac do listy i zwiekszyc o 1 wartosc wlasciwosci favoriteCount
+            return await models.Note.findByIdAndUpdate(
+                id,
+                {
+                    $push: {
+                        favoritedBy: mongoose.Types.ObjectId(user.id)
+                    },
+                    $inc: {
+                        favoriteCount: 1
+                    }
+                },
+                {
+                    new: true
+                }
+            );
+        }
+    },
 };
