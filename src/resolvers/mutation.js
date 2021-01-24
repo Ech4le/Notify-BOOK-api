@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 const {
     AuthenticationError,
     ForbiddenError
@@ -9,21 +10,44 @@ require('dotenv').config();
 const gravatar = require('../util/gravatar')
 
 module.exports = {
-    newNote: async (parent, args, { models }) => {
+    newNote: async (parent, args, { models, user }) => {
+        if (!user) {
+            throw new AuthenticationError('Tylko zalogowani uzytkownicy moga tworzyc notatki.')
+        }
         return await models.Note.create({
             content: args.content,
-            author: 'Adam Scott'
+            author: mongoose.Types.ObjectId(user.id)
         });
     },
-    deleteNote: async (parent, { id }, { models }) => {
+    deleteNote: async (parent, { id }, { models, user }) => {
+        if (!user) {
+            throw new AuthenticationError('Tylko zalogowani uzytkownicy moga usuwac notatki.')
+        }
+
+        //Odszukanie notatki
+        const note = await models.Note.findById(id);
+        //Jezeli wlasciciel notatki nie jest biezacym uzytkownikiem, nalezy zglosic blad
+        if (note && String(note.author) !== user.id) {
+            throw new ForbiddenError('Nie masz uprawnien do usuniecia notatki.');
+        }
         try {
-            await models.Note.findOneAndRemove({ _id: id});
+            await note.remove();
             return true;
         } catch (err) {
             return false;
         }
     },
-    updateNote: async (parent, { content, id }, { models }) => {
+    updateNote: async (parent, { content, id }, { models, user }) => {
+        if (!user) {
+            throw new AuthenticationError('Tylko zalogowani uzytkownicy moga usuwac notatki.')
+        }
+
+        //Odszukanie notatki
+        const note = await models.Note.findById(id);
+        //Jezeli wlasciciel notatki nie jest biezacym uzytkownikiem, nalezy zglosic blad
+        if (note && String(note.author) !== user.id) {
+            throw new ForbiddenError('Nie masz uprawnien do usuniecia notatki.');
+        }
         return await models.Note.findOneAndUpdate(
             {
                 _id: id,
