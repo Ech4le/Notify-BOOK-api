@@ -12,11 +12,16 @@ const models = require('./models');
 const resolvers = require('./resolvers');
 const typeDefs = require('./schema')
 
+const helmet = require('helmet')
+const cors = require('cors');
+
 //Uruchomienie serwera nasluchujacego na porcie wskazanym w pliku .env czyli na porcie 4000
 const port = process.env.PORT || 4000;
 const DB_HOST = process.env.DB_HOST;
 
 const app = express();
+//app.use(helmet());
+app.use(cors());
 
 db.connect(DB_HOST);
 
