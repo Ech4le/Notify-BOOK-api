@@ -1,0 +1,47 @@
+{
+  "name": "notedly-api",
+  "version": "1.0.0",
+  "description": "API code examples for JavaScript Everywhere by Adam Scott, published by O'Reilly Media",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "dev": "nodemon src/index.js",
+    "final": "nodemon final/index.js",
+    "seed": "node final/util/seed/index.js",
+    "lint": "eslint \"src/**/*.js\"",
+    "test": "jest"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**.test.js"
+    ]
+  },
+  "keywords": [],
+  "author": "Adam Scott",
+  "license": "MIT",
+  "devDependencies": {
+    "@shelf/jest-mongodb": "^1.2.3",
+    "eslint": "5.13.0",
+    "eslint-config-prettier": "4.0.0",
+    "eslint-plugin-prettier": "3.0.1",
+    "faker": "4.1.0",
+    "jest": "^26.6.3",
+    "node-fetch": "^2.6.1",
+    "prettier": "1.18.2"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.19.2",
+    "bcrypt": "^5.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "graphql-depth-limit": "^1.1.0",
+    "graphql-iso-date": "^3.6.1",
+    "graphql-validation-complexity": "^0.4.2",
+    "gravatar": "^1.8.1",
+    "helmet": "^4.4.1",
+    "jsonwebtoken": "^8.5.1",
+    "md5": "^2.3.0",
+    "mongoose": "^5.11.13",
+    "nodemon": "^2.0.7"
+  }
+}
