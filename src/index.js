@@ -24,7 +24,13 @@ const DB_HOST = process.env.DB_HOST;
 
 const app = express();
 //app.use(helmet());
-app.use(cors());
+
+var corsOptions = {
+    origin: '*',
+    credentials: true // <-- REQUIRED backend setting
+  };
+
+app.use(cors(corsOptions));
 
 db.connect(DB_HOST);
 
